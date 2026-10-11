@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    image: ${DOCKERHUB_USERNAME:-tanishk111}/tutedude-flask-backend:latest
+    ports: ["5000:5000"]
+    networks: [assignment-network]
+    restart: unless-stopped
+  frontend:
+    build: ./frontend
+    image: ${DOCKERHUB_USERNAME:-tanishk111}/tutedude-node-frontend:latest
+    ports: ["3000:3000"]
+    environment:
+      PORT: 3000
+      FLASK_BACKEND_URL: http://backend:5000
+    depends_on: [backend]
+    networks: [assignment-network]
+    restart: unless-stopped
+networks:
+  assignment-network:
+    driver: bridge
+
